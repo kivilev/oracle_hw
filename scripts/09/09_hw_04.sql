@@ -1,10 +1,23 @@
+drop  type t_dates;
+/
+drop  type t_numbers;
+/
+drop  type t_varr;
+/
+
 -- Набор типов, которые понадобятся ниже. Глобально, так как они будут использоваться в SQL
 create or replace  type t_rec  is object (val varchar2(100 char));
+/
 create or replace  type t_date is object (schedule_dtime date);
+/
 create or replace  type t_num  is object(x number);
+/
 create or replace  type t_varr is varray(5) of t_rec;
+/
 create or replace  type t_numbers  is table of t_num;
+/
 create or replace  type t_dates  is table of t_date;
+/
 
 create or replace function get_next_schedule_time (
     v_date date,
@@ -141,15 +154,17 @@ where hh.x is not null
 
 return v_next_date;
 end;
+/
 
+-- Проверка
 begin
 dbms_output.put_line
-    (
-        to_char(
-        get_next_schedule_time
-            (
-            to_date('2010-09-09 23:36', 'yyyy-mm-dd hh24:mi'),
-            '0,45;12;1,2,6;3,6,14,18,21,24,28;1,2,3,4,5,6,7,8,9,10,11,12;')
-            ,  'yyyy-mm-dd hh24:mi'
-        ));
+        (
+            to_char(
+                    get_next_schedule_time
+                        (
+                            to_date('2010-09-09 23:36', 'yyyy-mm-dd hh24:mi'),
+                            '0,45;12;1,2,6;3,6,14,18,21,24,28;1,2,3,4,5,6,7,8,9,10,11,12;')
+                ,  'yyyy-mm-dd hh24:mi'
+                ));
 end;
